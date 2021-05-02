@@ -73,11 +73,31 @@ public class ConversationMessage {
     return Conversions.byteArrayToLong(bytes);
   }
 
+  public SpannableString findReplaceRudeWord(SpannableString body){
+    SpannableStringBuilder builder = new SpannableStringBuilder("");
+    if ( hasRude(body) ){
+      String result;
+      result = body.toString().replaceAll("(?i)([a4@]+?nj[il1]+?n]g96]+?)|([b8][0o]+?d[0o]+?h)|([8b]r[3e]+?n[g96][s5][e3]+?k)","*****");
+      builder.append(result);
+    }
+    return SpannableString.valueOf(builder);
+  }
+
+  public boolean hasRude(SpannableString body){
+    String[] split = body.toString().split("\\s+");
+    boolean state = false;
+    for (String i : split){
+      if ( i.matches("(?i)([a4@]+?nj[il1]+?n]g96]+?)|([b8][0o]+?d[0o]+?h)|([8b]r[3e]+?n[g96][s5][e3]+?k)") )
+        state = true;
+    }
+    return state;
+  }
+
   public @NonNull SpannableString getDisplayBody(Context context) {
     if (mentions.isEmpty() || body == null) {
-      return messageRecord.getDisplayBody(context);
+      return findReplaceRudeWord( messageRecord.getDisplayBody(context) );
     }
-    return body;
+    return findReplaceRudeWord(body);
   }
 
   /**
